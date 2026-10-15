@@ -144,6 +144,8 @@ footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);paddi
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 img{max-width:100%}
+.zin{width:72px;text-align:right;font-family:var(--f-mono)}
+.znote{width:100%;min-width:120px}
 .gate{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px))}
 .gate-card{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px}
 .gate-card input{font-size:1rem;padding:10px 12px}
@@ -178,7 +180,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
 </header>
 
 <nav class="jump" aria-label="Bereiche">
-  <a href="#aufgaben">Aufgaben</a><a href="#karten">Karten</a><a href="#lehrer">Lehrer</a><a href="#ablauf">Ablauf</a>
+  <a href="#aufgaben">Aufgaben</a><a href="#karten">Karten</a><a href="#bezahlt">Bezahlt</a><a href="#lehrer">Lehrer</a><a href="#ablauf">Ablauf</a>
   <a href="#location">Location</a><a href="#essen">Essen</a><a href="#einladungen">Einladungen</a><a href="#teams">Teams</a>
   <a href="#zeitleiste">Zeitleiste</a><a href="#abstimmungen">Abstimmungen</a>
 </nav>
@@ -232,6 +234,25 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
     <p class="note">Der WhatsApp-Export zeigt nur, wie oft jede Option gewählt wurde, nicht wer. Die Namen siehst du in WhatsApp, wenn du in der Umfrage auf „Stimmen anzeigen“ tippst. Die Summe passt zu den 154 geplanten Karten.</p>
   </div>
   <p class="status" id="kStatus"></p>
+</section>
+
+<section id="bezahlt">
+  <div class="sec-row">
+    <div class="sec-head"><p class="eyebrow">Verbindlich · unabhängig von der Umfrage-Liste</p><h2>Feste Bestellungen &amp; Bezahlung</h2></div>
+    <p class="muted"><b class="num" id="zFest">0</b> fest bestellt · <b class="num" id="zBez">0</b> bezahlt · <span class="num" id="zKomplett">0</span> Personen vollständig bezahlt</p>
+  </div>
+  <p class="status err" id="zHint" hidden>Das Script ist noch nicht aktualisiert. Bitte zuerst den neuen Script-Code einfügen und als neue Version bereitstellen.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Name</th><th class="r">Fest bestellt</th><th class="r">Bezahlt</th><th>Status</th><th>Notiz</th><th></th></tr></thead>
+      <tbody id="zBody"><tr><td colspan="6" class="empty">Liste wird geladen …</td></tr></tbody>
+    </table>
+  </div>
+  <form class="addform" id="zForm">
+    <input type="text" id="zName" placeholder="Name hinzufügen" aria-label="Name hinzufügen" required>
+    <button type="submit">Hinzufügen</button>
+  </form>
+  <p class="note">Zahlen direkt in der Tabelle ändern, gespeichert wird beim Verlassen des Feldes. Hier nur eintragen, was verbindlich bestellt bzw. bezahlt ist. Die Umfrage-Liste oben bleibt davon unberührt.</p>
 </section>
 
 <section id="lehrer">
@@ -417,7 +438,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   $('dBall').textContent=Math.max(0,Math.round((new Date(2027,6,3)-today)/DAY));
 
   let pw=''; try{pw=localStorage.getItem(PWKEY)||'';}catch(e){}
-  let data={Karten:[],Lehrer:[],Aufgaben:[]};
+  let data={Karten:[],Lehrer:[],Aufgaben:[],Zahlungen:[]};
   let busy=0, lastLoad=null;
 
   const bool=v=>v===true||String(v).toUpperCase()==='TRUE'||String(v).toUpperCase()==='WAHR';
@@ -449,7 +470,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
       const r=await fetch(API+'?pw='+encodeURIComponent(pw)+'&t='+Date.now(),{signal:ctl.signal}); clearTimeout(to);
       const j=await r.json();
       if(!j.ok){ if(j.fehler==='passwort'){showGate('Passwort falsch.');return false;} throw new Error(j.fehler); }
-      data=j.daten; lastLoad=new Date();
+      data=j.daten; $('zHint').hidden=Array.isArray(data.Zahlungen); if(!Array.isArray(data.Zahlungen)) data.Zahlungen=[]; lastLoad=new Date();
       render();
       setSync('Stand: '+lastLoad.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr');
       return true;
@@ -487,7 +508,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
     b.addEventListener('click',()=>{ if(b.dataset.armed){onGo();} else {b.dataset.armed='1';b.textContent='Sicher?';setTimeout(()=>{delete b.dataset.armed;b.textContent=label;},3000);} });
     return b;
   }
-  function render(){ renderTodos(); renderKarten(); renderLehrer(); }
+  function render(){ renderTodos(); renderKarten(); renderZahlungen(); renderLehrer(); }
 
   function renderTodos(){
     const items=data.Aufgaben.map(t=>({...t,erledigt:bool(t.erledigt),faellig:isoDay(t.faellig)}));
@@ -507,6 +528,24 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
     $('kSum').textContent=items.reduce((s,k)=>s+(Number(k.anzahl)||0),0); $('kCount').textContent=items.length;
     if(!items.length){$('kBody').replaceChildren(el('tr',{},[el('td',{colSpan:4,className:'empty',textContent:'Noch keine Bestellungen eingetragen.'})]));return;}
     $('kBody').replaceChildren(...items.map(k=>el('tr',{},[el('td',{textContent:k.name}),el('td',{className:'r num',textContent:String(k.anzahl)}),el('td',{className:'muted',textContent:k.notiz||''}),el('td',{className:'r'},[confirmBtn('Entfernen',()=>del('Karten',k.id))])])));
+  }
+  function renderZahlungen(){
+    const items=[...data.Zahlungen].sort((a,b)=>String(a.name).localeCompare(String(b.name),'de'));
+    const n=v=>Math.max(0,parseInt(v,10)||0);
+    $('zFest').textContent=items.reduce((s,z)=>s+n(z.fest),0);
+    $('zBez').textContent=items.reduce((s,z)=>s+n(z.bezahlt),0);
+    $('zKomplett').textContent=items.filter(z=>n(z.fest)>0&&n(z.bezahlt)>=n(z.fest)).length;
+    if(!items.length){$('zBody').replaceChildren(el('tr',{},[el('td',{colSpan:6,className:'empty',textContent:'Noch keine Namen eingetragen.'})]));return;}
+    $('zBody').replaceChildren(...items.map(z=>{
+      const f=n(z.fest), b=n(z.bezahlt);
+      const st=f===0?(b>0?['ok','bezahlt']:['plain','nicht bestellt']):(b>=f?['ok','bezahlt']:(b>0?['warn','teilweise']:['crit','offen']));
+      const num=(field,val,label)=>{const i=el('input',{type:'number',min:0,max:30,value:val,className:'zin',inputMode:'numeric'});i.setAttribute('aria-label',label+' '+z.name);
+        i.addEventListener('change',()=>{const v=n(i.value);i.value=v;save('Zahlungen',z.id,{[field]:v});});return i;};
+      const note=el('input',{type:'text',value:z.notiz||'',className:'znote',placeholder:'–'});note.setAttribute('aria-label','Notiz '+z.name);
+      note.addEventListener('change',()=>save('Zahlungen',z.id,{notiz:note.value.trim()}));
+      return el('tr',{},[el('td',{textContent:z.name}),el('td',{className:'r'},[num('fest',f,'Fest bestellt')]),el('td',{className:'r'},[num('bezahlt',b,'Bezahlt')]),
+        el('td',{},[el('span',{className:'pill '+st[0],textContent:st[1]})]),el('td',{},[note]),el('td',{className:'r'},[confirmBtn('Entfernen',()=>del('Zahlungen',z.id))])]);
+    }));
   }
   const ZLAB={ja:'Ja',vorbehalt:'Ja, nicht fest',offen:'Noch offen',nein:'Nein'};
   function renderLehrer(){
@@ -543,6 +582,14 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
     if(!name||!(anzahl>0)) return;
     save('Karten',slug(name),{name,anzahl,notiz:$('kNote').value.trim()});
     $('kName').value='';$('kNote').value='';$('kNum').value='4';
+  });
+  $('zForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=$('zName').value.trim(); if(!name) return;
+    const id=slug(name);
+    if(data.Zahlungen.some(z=>String(z.id)===id)){ setSync(name+' steht schon in der Liste.',true); return; }
+    save('Zahlungen',id,{name,fest:0,bezahlt:0,notiz:''});
+    $('zName').value='';
   });
   $('reload').addEventListener('click',()=>load());
   $('logout').addEventListener('click',()=>{try{localStorage.removeItem(PWKEY);}catch(e){} pw=''; showGate('');});
