@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Abiball 2027 Semper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: schmale Leseachse, oben Eckdaten wie eine Einladungskarte, darunter Arbeitsbereiche mit Sprungnavigation */
+:root{
+  --bg:#f6f3ec; --surface:#fffdf8; --ink:#1d1a14; --muted:#6b6250; --line:#e2dac8;
+  --gold:#9a7317; --gold-soft:#f3e7c6; --card-dark:#17140f; --on-dark:#f2e6c4;
+  --ok:#2f7a4b; --ok-bg:#e3f1e7; --warn:#a2610b; --warn-bg:#fbeed6; --crit:#a8332a; --crit-bg:#f8e1dd;
+  --f-display:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --f-body:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#100e0b; --surface:#1a1712; --ink:#efe7d4; --muted:#a69a80; --line:#2f2a20;
+  --gold:#d8b25a; --gold-soft:#2c2414; --card-dark:#0b0a08; --on-dark:#f2e6c4;
+  --ok:#7cc796; --ok-bg:#16291d; --warn:#e8b465; --warn-bg:#2e2311; --crit:#ef8b80; --crit-bg:#33171a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#100e0b; --surface:#1a1712; --ink:#efe7d4; --muted:#a69a80; --line:#2f2a20;
+  --gold:#d8b25a; --gold-soft:#2c2414; --card-dark:#0b0a08; --on-dark:#f2e6c4;
+  --ok:#7cc796; --ok-bg:#16291d; --warn:#e8b465; --warn-bg:#2e2311; --crit:#ef8b80; --crit-bg:#33171a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 64px}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;line-height:1.15}
+h2{font-size:2rem}
+h3{font-size:1.3rem}
+p{margin:0}
+a{color:var(--gold)}
+.eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.note{font-size:.8rem;color:var(--muted)}
+
+.hero{background:var(--card-dark);color:var(--on-dark);border-radius:6px;padding:34px 28px;position:relative;overflow:hidden;border:1px solid #6b5420}
+.hero::before{content:"";position:absolute;inset:10px;border:1px solid #b8913a;border-radius:3px;pointer-events:none;opacity:.7}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:end}
+.hero h1{font-size:clamp(2.6rem,7vw,4.4rem);font-style:italic;font-weight:500;color:#e2c27a}
+.motto{font-family:var(--f-display);font-size:1.25rem;margin-top:6px;color:#efe0b8}
+.facts{display:grid;gap:10px;font-size:.92rem}
+.facts div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #3a3020;padding-bottom:6px}
+.facts span:first-child{color:#bfae86}
+.count{display:flex;gap:22px;margin-top:22px;flex-wrap:wrap}
+.count b{display:block;font-family:var(--f-mono);font-size:1.9rem;color:#e2c27a;font-weight:600}
+.count small{color:#bfae86;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+
+nav.jump{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:var(--bg);padding-block:8px;border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.jump a{flex:none;text-decoration:none;color:var(--ink);font-size:.85rem;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+nav.jump a:hover,nav.jump a:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
+
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:64px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-row{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+
+.pill{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;text-align:center;white-space:nowrap}
+.crit{background:var(--crit-bg);color:var(--crit)}
+.warn{background:var(--warn-bg);color:var(--warn)}
+.ok{background:var(--ok-bg);color:var(--ok)}
+.info{background:var(--gold-soft);color:var(--gold)}
+.plain{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.big{font-family:var(--f-mono);font-size:2rem;font-weight:600;font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.92rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;text-align:right}
+ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.flow div{padding:14px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.flow div:last-child{border-right:0}
+.flow b{font-family:var(--f-mono);color:var(--gold);font-size:1.1rem}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tbody tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+tfoot td{font-weight:700;border-top:1px solid var(--line);border-bottom:0}
+
+input[type=text],input[type=number],input[type=date],select{font:inherit;font-size:.9rem;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);min-width:0}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+button{font:inherit;font-size:.85rem;font-weight:700;border-radius:6px;padding:7px 12px;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:var(--surface)}
+button.ghost{background:transparent;color:var(--muted);border-color:var(--line);font-weight:600;padding:4px 8px}
+button.ghost:hover{color:var(--crit);border-color:var(--crit)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.addform{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.addform input[type=text]{flex:1 1 180px}
+.addform input[type=number]{width:90px}
+.empty{padding:18px;text-align:center;color:var(--muted);font-size:.9rem}
+.status{font-size:.8rem;color:var(--muted)}
+.status.err{color:var(--crit)}
+
+.todo{display:flex;flex-direction:column;gap:6px}
+.trow{display:grid;grid-template-columns:22px 1fr auto auto;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.trow input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold);margin:0}
+.trow .txt{min-width:0}
+.trow .txt span{display:block}
+.trow .who{font-size:.78rem;color:var(--muted)}
+.trow.done .txt span:first-child{text-decoration:line-through;color:var(--muted)}
+.trow.due-crit{border-color:var(--crit)}
+.trow.due-warn{border-color:var(--warn)}
+
+.lehrer-act{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lehrer-act label{display:flex;gap:6px;align-items:center;font-size:.82rem}
+.lehrer-act input{accent-color:var(--gold)}
+
+.tl{display:flex;flex-direction:column;border-left:2px solid var(--line);margin-left:6px}
+.tl div{position:relative;padding:0 0 14px 20px;display:grid;grid-template-columns:96px 1fr;gap:12px}
+.tl div::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--line)}
+.tl div.future::before{border-color:var(--gold);background:var(--gold)}
+.tl div.now::before{border-color:var(--crit);background:var(--crit)}
+.tl time{font-family:var(--f-mono);font-size:.85rem;color:var(--muted)}
+
+.teams{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.team{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px}
+.team h3{font-size:1.1rem}
+.team p{font-size:.88rem;color:var(--muted);margin-top:2px}
+
+footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+
+@media (max-width:760px){
+  .hero-grid,.grid2,.grid3,.teams{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr}
+  .flow div{border-right:0;border-bottom:1px solid var(--line)}
+  .flow div:last-child{border-bottom:0}
+  .trow{grid-template-columns:22px 1fr auto}
+  .trow .pillcell{grid-column:2 / 3}
+  .tl div{grid-template-columns:1fr;gap:2px}
+  h2{font-size:1.7rem}
+}
+@media (prefers-reduced-motion: no-preference){ html{scroll-behavior:smooth} }
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+img{max-width:100%}
+.gate{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px))}
+.gate-card{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px}
+.gate-card input{font-size:1rem;padding:10px 12px}
+.syncbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64px, env(safe-area-inset-bottom, 0px))}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow" style="color:#bfae86">Semper Gymnasium Dresden · Abiturjahrgang 2027</p>
+      <h1>Abiball 2027</h1>
+      <p class="motto">„DönerkebABI – 12 Jahre auf der Stelle gedreht“</p>
+      <div class="count">
+        <div><b id="dBall">–</b><small>Tage bis zum Ball</small></div>
+        <div><b id="dOpen">–</b><small>offene Aufgaben</small></div>
+      </div>
+    </div>
+    <div class="facts">
+      <div><span>Datum</span><span>Sa, 03.07.2027</span></div>
+      <div><span>Beginn</span><span>16:00 Uhr</span></div>
+      <div><span>Ort</span><span>Gasthof Weißig</span></div>
+      <div><span>Adresse</span><span>Bautzner Landstr. 280</span></div>
+      <div><span>Essen</span><span>Dönerbuffet</span></div>
+      <div><span>Gäste</span><span class="num">154 + 18 Lehrer</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="jump" aria-label="Bereiche">
+  <a href="#aufgaben">Aufgaben</a><a href="#karten">Karten</a><a href="#lehrer">Lehrer</a><a href="#ablauf">Ablauf</a>
+  <a href="#location">Location</a><a href="#essen">Essen</a><a href="#einladungen">Einladungen</a><a href="#teams">Teams</a>
+  <a href="#zeitleiste">Zeitleiste</a><a href="#abstimmungen">Abstimmungen</a>
+</nav>
+
+<section id="aufgaben">
+  <div class="sec-head"><p class="eyebrow">Mit Fälligkeit · rot = überfällig oder heute, orange = in den nächsten 7 Tagen</p><h2>Aufgaben &amp; Erinnerungen</h2></div>
+  <div class="todo" id="todoList"><p class="empty">Aufgaben werden geladen …</p></div>
+  <form class="addform" id="todoForm">
+    <input type="text" id="todoText" placeholder="Neue Aufgabe" aria-label="Neue Aufgabe" required>
+    <input type="text" id="todoWho" placeholder="Wer?" aria-label="Wer" style="flex:0 1 140px">
+    <input type="date" id="todoDue" aria-label="Fällig am">
+    <button type="submit">Hinzufügen</button>
+  </form>
+  <p class="status" id="todoStatus"></p>
+</section>
+
+<section id="karten">
+  <div class="sec-row">
+    <div class="sec-head"><p class="eyebrow">Wer hat wie viele Karten bestellt</p><h2>Kartenbestellungen</h2></div>
+    <p class="muted">Bestellt: <b class="num" id="kSum">0</b> von <span class="num">154</span> geplanten Karten · <span class="num" id="kCount">0</span> Schüler eingetragen</p>
+  </div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Name</th><th class="r">Karten</th><th>Notiz</th><th></th></tr></thead>
+      <tbody id="kBody"><tr><td colspan="4" class="empty">Liste wird geladen …</td></tr></tbody>
+    </table>
+  </div>
+  <form class="addform" id="kForm">
+    <input type="text" id="kName" placeholder="Name" aria-label="Name" required>
+    <input type="number" id="kNum" min="1" max="20" value="4" aria-label="Anzahl Karten" required>
+    <input type="text" id="kNote" placeholder="Notiz (optional)" aria-label="Notiz">
+    <button type="submit">Eintragen</button>
+  </form>
+  <p class="note">Gleicher Name überschreibt den alten Eintrag.</p>
+  <div class="box">
+    <p class="eyebrow">Umfrage im Klassenchat vom 16.09.2025 · „Wie viele Menschen wollt ihr mitbringen (euch eingeschlossen)?“</p>
+    <div class="tbl" style="border:0"><table>
+      <thead><tr><th>Personen</th><th class="r">Stimmen</th><th class="r">Karten</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="r num">1</td><td class="r num">1</td></tr>
+        <tr><td>2</td><td class="r num">0</td><td class="r num">0</td></tr>
+        <tr><td>3</td><td class="r num">3</td><td class="r num">9</td></tr>
+        <tr><td>4</td><td class="r num">7</td><td class="r num">28</td></tr>
+        <tr><td>5</td><td class="r num">5</td><td class="r num">25</td></tr>
+        <tr><td>6</td><td class="r num">3</td><td class="r num">18</td></tr>
+        <tr><td>7</td><td class="r num">8</td><td class="r num">56</td></tr>
+        <tr><td>mehr als 7</td><td class="r num">2</td><td class="r num">mind. 16</td></tr>
+      </tbody>
+      <tfoot><tr><td>Gesamt</td><td class="r num">29</td><td class="r num">mind. 153</td></tr></tfoot>
+    </table></div>
+    <p class="note">Der WhatsApp-Export zeigt nur, wie oft jede Option gewählt wurde, nicht wer. Die Namen siehst du in WhatsApp, wenn du in der Umfrage auf „Stimmen anzeigen“ tippst. Die Summe passt zu den 154 geplanten Karten.</p>
+  </div>
+  <p class="status" id="kStatus"></p>
+</section>
+
+<section id="lehrer">
+  <div class="sec-row">
+    <div class="sec-head"><p class="eyebrow">Stand Zusageliste Oktober 2026</p><h2>Lehrkräfte</h2></div>
+    <p class="muted"><span class="pill ok" id="lJa">– fest</span> <span class="pill warn" id="lVor">– unter Vorbehalt</span> <span class="pill plain" id="lOff">– offen</span></p>
+  </div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Name</th><th>Zusage</th><th>Essen</th><th>Was noch zu tun ist</th></tr></thead>
+      <tbody id="lBody"><tr><td colspan="4" class="empty">Liste wird geladen …</td></tr></tbody>
+    </table>
+  </div>
+  <p class="note">Herr Wehner, Frau Wadewitz und Herr Roy sind nicht mehr an der Schule und werden per Mail eingeladen.</p>
+  <p class="status" id="lStatus"></p>
+</section>
+
+<section id="ablauf">
+  <div class="sec-head"><p class="eyebrow">Laut Einladungstext</p><h2>Ablauf am 03.07.2027</h2></div>
+  <div class="flow">
+    <div><b>16:00</b><span>Beginn, Eintreffen</span></div>
+    <div><b>ca. 17:00</b><span>Familienfotos</span></div>
+    <div><b>danach</b><span>Feierliche Zeugnisverleihung</span></div>
+    <div><b>19:00</b><span>Gemeinsames Abendessen (Buffet)</span></div>
+    <div><b>danach</b><span>Programm &amp; Party, DJ bis 02:00</span></div>
+  </div>
+  <p class="note">Räume müssen bis Sonntag, 04.07.2027, 9:00 Uhr geräumt sein. Die Zeugnisausgabe findet auf dem Ball statt.</p>
+</section>
+
+<section id="location">
+  <div class="sec-head"><p class="eyebrow">Nutzungsvertrag G 009/2026</p><h2>Gasthof Weißig</h2></div>
+  <div class="grid2">
+    <div class="box">
+      <dl class="kv">
+        <dt>Adresse</dt><dd>Bautzner Landstraße 280, 01328 Dresden</dd>
+        <dt>Räume</dt><dd>Ballsaal (max. 199) + kleiner Saal (max. 45)</dd>
+        <dt>Mietzeit</dt><dd>Wochenende, bis So 9:00 Uhr</dd>
+        <dt>Mieterin</dt><dd>Mandy Noack (Elternvertretung)</dd>
+        <dt>Kündigung</dt><dd>kostenlos bis 08.05.2027</dd>
+      </dl>
+      <p class="note">Gewählt am 30.03.2026 (25:0). Heller und günstiger als das Arteum. Weitere Angebote: Parkhotel (Kakadu Bar), Arteum, Watzke Ballsaal, Flughafen.</p>
+    </div>
+    <div class="box">
+      <p class="eyebrow">Inklusive</p>
+      <ul class="clean">
+        <li>Tische &amp; Stühle für 250 Personen inkl. Aufbau</li>
+        <li>Theke mit Zapfanlage, Getränkekühlschrank, Tiefkühltruhe</li>
+        <li>35 m² Bühne, Garderobe, WCs, Parkplätze</li>
+        <li>Externes Catering erlaubt</li>
+      </ul>
+      <p class="eyebrow" style="margin-top:6px">Achtung</p>
+      <ul class="clean">
+        <li>Kein Geschirr, keine Gläser, kein Besteck</li>
+        <li>Lichttechnik nur gegen Aufpreis</li>
+        <li>Haftpflichtversicherung vorher vorlegen, GEMA selbst anmelden</li>
+        <li>Personenhöchstzahl darf nicht überschritten werden</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="essen">
+  <div class="sec-head"><p class="eyebrow">Catering</p><h2>Essen</h2></div>
+  <div class="grid2">
+    <div class="box">
+      <p><b>Entscheidung: Dönerbuffet</b> (Abstimmung 19.06.2026, 19:7 gegen klassisches Buffet).</p>
+      <p class="muted">Gründe laut Chat: einfacher bei Unverträglichkeiten. Heinrich hat die Entscheidung am 25.08.2026 als endgültig erklärt. Ein Caterer ist noch nicht gebucht. Rona hat Hilfe beim Catering angeboten.</p>
+    </div>
+    <div class="box">
+      <p class="eyebrow">Essbesonderheiten (Umfrage 27.04.2026, Lehrer inklusive)</p>
+      <table>
+        <tbody>
+          <tr><td>Vegetarisch</td><td class="r num">15</td></tr>
+          <tr><td>Vegan</td><td class="r num">1</td></tr>
+          <tr><td>Laktoseintoleranz</td><td class="r num">8</td></tr>
+          <tr><td>Glutenfrei</td><td class="r num">1</td></tr>
+          <tr><td>Hypercholesterinämie</td><td class="r num">1</td></tr>
+          <tr><td>Walnüsse</td><td class="r num">1</td></tr>
+          <tr><td>Diverse Früchte</td><td class="r num">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="einladungen">
+  <div class="sec-head"><p class="eyebrow">Druck &amp; Design</p><h2>Einladungen</h2></div>
+  <div class="grid3">
+    <div class="box"><p class="eyebrow">Design</p><p class="big" style="font-family:var(--f-display)">Karte 2</p><p class="note">Schwarz mit goldener Schrift, 16 Stimmen (26.08.2026).</p></div>
+    <div class="box"><p class="eyebrow">Menge</p><p class="big">ca. 50</p><p class="note">Umfrage 09.09.2026 mit 22 Antworten. Formelle Einladung, nicht das Ticket.</p></div>
+    <div class="box"><p class="eyebrow">Fehler vor dem Druck</p><p class="big" style="color:var(--crit)">200 → 280</p><p class="note">Die Karte nennt „Bautzner Landstraße 200“, laut Vertrag ist es Nr. 280.</p></div>
+  </div>
+</section>
+
+<section id="teams">
+  <div class="sec-head"><p class="eyebrow">Einteilung vom 31.03.2026 (Whiteboard)</p><h2>Teams</h2></div>
+  <div class="teams">
+    <div class="team"><h3>Location &amp; Gästezahl</h3><p>Emma, Mia, Eva, Johanna, Anna, Merle</p></div>
+    <div class="team"><h3>Catering</h3><p>Paul, Laurenz, Merle</p></div>
+    <div class="team"><h3>Einladungen</h3><p>Magdalena</p></div>
+    <div class="team"><h3>Deko</h3><p>Stella, Lara, Charlotte, Anita, Mia</p></div>
+    <div class="team"><h3>Programm</h3><p>Anita, Rona</p></div>
+    <div class="team"><h3>Musik</h3><p>Arthur, Luca</p></div>
+    <div class="team"><h3>Fotos</h3><p>Marie, Gustav, Varvara, Lukas</p></div>
+    <div class="team"><h3>Merch (Pulli/Shirt?)</h3><p>Helene, Varvara</p></div>
+    <div class="team"><h3>Motto</h3><p>Ella, Helene, Michelle, Marie</p></div>
+    <div class="team"><h3>Finanzierung</h3><p>Johanna, Fritzi, Stella</p></div>
+    <div class="team"><h3>Helfende</h3><p>Albert, Lara, Danylo, Florian, Carl</p></div>
+    <div class="team"><h3>Gesamtorga</h3><p>Merle, Heinrich, Mandy Noack (Eltern)</p></div>
+  </div>
+</section>
+
+<section id="zeitleiste">
+  <div class="sec-head"><p class="eyebrow">Was passiert ist und was kommt</p><h2>Zeitleiste</h2></div>
+  <div class="tl">
+    <div><time>02.09.2025</time><span>Abstimmung: Abiball ja (26:0)</span></div>
+    <div><time>24.09.2025</time><span>Lehrer sollen eingeladen werden (28:0)</span></div>
+    <div><time>21.10.2025</time><span>Abstimmung über einzelne Lehrkräfte, Zeugnisausgabe beim Ball</span></div>
+    <div><time>16.12.2025</time><span>Idee Flughafen-Konferenzebene (23:0), nicht weiterverfolgt</span></div>
+    <div><time>25.03.2026</time><span>Angebote verschiedener Locations, Catering-Umfrage gestartet</span></div>
+    <div><time>30.03.2026</time><span>Gasthof Weißig angenommen (25:0)</span></div>
+    <div><time>31.03.2026</time><span>Teams eingeteilt</span></div>
+    <div><time>13.04.2026</time><span>Motto-Umfrage: zunächst „Abikalypse“</span></div>
+    <div><time>15.04.2026</time><span>Nutzungsvertrag Gasthof Weißig erhalten</span></div>
+    <div><time>19.06.2026</time><span>Dönerbuffet gewählt (19:7)</span></div>
+    <div><time>23.06.2026</time><span>Mottoänderung zum Essen: ja (20:6)</span></div>
+    <div><time>25.08.2026</time><span>Motto final: DönerkebABI (17:9)</span></div>
+    <div><time>26.08.2026</time><span>Einladungsdesign: Karte 2 (16 Stimmen)</span></div>
+    <div class="now"><time>31.10.2026</time><span>Frist laut Vertrag (Anzahlung)</span></div>
+    <div class="future"><time>14.11.2026</time><span>Baumpflanzaktion Sparkasse und Tag der offenen Tür</span></div>
+    <div class="future"><time>08.05.2027</time><span>Letzter Tag für kostenlose Kündigung</span></div>
+    <div class="future"><time>03.07.2027</time><span><b>Abiball</b>, 16:00 Uhr</span></div>
+    <div class="future"><time>04.07.2027</time><span>Räumung bis 9:00 Uhr</span></div>
+  </div>
+</section>
+
+<section id="abstimmungen">
+  <div class="sec-head"><p class="eyebrow">Was die Stufe entschieden hat</p><h2>Abstimmungen</h2></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Datum</th><th>Frage</th><th>Ergebnis</th></tr></thead>
+    <tbody>
+      <tr><td class="num">02.09.25</td><td>Abiball ja oder nein</td><td>Ja 26 : 0</td></tr>
+      <tr><td class="num">16.09.25</td><td>Personen pro Schüler (inkl. selbst)</td><td>meist 4 oder 7, Spanne 1 bis 7+</td></tr>
+      <tr><td class="num">24.09.25</td><td>Lehrer einladen</td><td>Ja 28 : 0</td></tr>
+      <tr><td class="num">16.12.25</td><td>Flughafen als Location</td><td>23 : 0 dafür, nicht umgesetzt</td></tr>
+      <tr><td class="num">30.03.26</td><td>Gasthof Weißig</td><td>25 : 0 dafür</td></tr>
+      <tr><td class="num">19.06.26</td><td>Dönerbuffet oder normales Buffet</td><td>Döner 19 : 7</td></tr>
+      <tr><td class="num">23.06.26</td><td>Motto ans Essen anpassen</td><td>Ja 20 : 6</td></tr>
+      <tr><td class="num">25.08.26</td><td>Motto: DönerkebABI oder ABIkalypse</td><td>DönerkebABI 17 : 9</td></tr>
+      <tr><td class="num">26.08.26</td><td>Einladungsdesign</td><td>Karte 2 (16), Karte 3 (9)</td></tr>
+      <tr><td class="num">09.09.26</td><td>Einladungen pro Person</td><td>1×6, 2×7, 3×7, 4×1, 5×1</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+
+<footer class="syncbar">
+  <span class="status" id="sync">Lade Daten …</span>
+  <button type="button" class="ghost" id="reload">Neu laden</button>
+  <button type="button" class="ghost" id="logout">Abmelden</button>
+</footer>
+</div>
+
+<div class="gate" id="gate" hidden>
+  <form class="gate-card" id="gateForm">
+    <p class="eyebrow">Semper Gymnasium · Abiturjahrgang 2027</p>
+    <h2>Abiball 2027</h2>
+    <p class="muted">Bitte das Passwort der Stufe eingeben.</p>
+    <input type="password" id="gatePw" autocomplete="current-password" aria-label="Passwort" required>
+    <button type="submit" id="gateBtn">Öffnen</button>
+    <p class="status err" id="gateMsg"></p>
+  </form>
+</div>
+
+<script>
+(function(){
+  const API='https://script.google.com/macros/s/AKfycbwTQ9GhmNlJWAYEqSPpZ4OiCRtL6EOn7dhUlpqEkcyY5iH4JClyTC9_9W7mHaaBZSseZw/exec';
+  const PWKEY='abiball27-pw';
+  const DAY=86400000;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const $=id=>document.getElementById(id);
+  const el=(tag,props,kids)=>{const e=document.createElement(tag);if(props)Object.assign(e,props);(kids||[]).forEach(k=>e.append(k));return e;};
+  $('dBall').textContent=Math.max(0,Math.round((new Date(2027,6,3)-today)/DAY));
+
+  let pw=''; try{pw=localStorage.getItem(PWKEY)||'';}catch(e){}
+  let data={Karten:[],Lehrer:[],Aufgaben:[]};
+  let busy=0, lastLoad=null;
+
+  const bool=v=>v===true||String(v).toUpperCase()==='TRUE'||String(v).toUpperCase()==='WAHR';
+  const slug=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ß/g,'ss').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,80)||('x'+Date.now().toString(36));
+  function isoDay(v){
+    if(!v) return '';
+    const s=String(v);
+    if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    const d=new Date(s); if(isNaN(d)) return '';
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  const fmtDate=iso=>{if(!iso)return '';const [y,m,d]=iso.split('-');return d+'.'+m+'.'+y;};
+  function dueInfo(iso,done){
+    if(done) return {cls:'ok',label:'erledigt',row:''};
+    if(!iso) return {cls:'plain',label:'ohne Datum',row:''};
+    const [y,m,d]=iso.split('-').map(Number); const diff=Math.round((new Date(y,m-1,d)-today)/DAY);
+    if(diff<0) return {cls:'crit',label:'überfällig',row:'due-crit'};
+    if(diff===0) return {cls:'crit',label:'heute',row:'due-crit'};
+    if(diff<=7) return {cls:'warn',label:'in '+diff+(diff===1?' Tag':' Tagen'),row:'due-warn'};
+    return {cls:'plain',label:fmtDate(iso),row:''};
+  }
+  function setSync(text,err){const s=$('sync');s.textContent=text;s.className='status'+(err?' err':'');}
+
+  /* ---------- Server ---------- */
+  async function load(silent){
+    if(!silent) setSync('Lade Daten …');
+    try{
+      const ctl=new AbortController(); const to=setTimeout(()=>ctl.abort(),20000);
+      const r=await fetch(API+'?pw='+encodeURIComponent(pw)+'&t='+Date.now(),{signal:ctl.signal}); clearTimeout(to);
+      const j=await r.json();
+      if(!j.ok){ if(j.fehler==='passwort'){showGate('Passwort falsch.');return false;} throw new Error(j.fehler); }
+      data=j.daten; lastLoad=new Date();
+      render();
+      setSync('Stand: '+lastLoad.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr');
+      return true;
+    }catch(e){
+      setSync('Daten konnten nicht geladen werden. Internetverbindung prüfen und neu laden.',true);
+      if(!$('gate').hidden) $('gateMsg').textContent='Keine Verbindung zum Server. In der Vorschau von Claude oder anderen Apps ist das gesperrt. Bitte die Seite über ihre Internetadresse in Safari öffnen.';
+      return false;
+    }
+  }
+  async function send(blatt,aktion,id,felder){
+    busy++; setSync('Speichere …');
+    try{
+      const r=await fetch(API,{method:'POST',body:JSON.stringify({pw,blatt,aktion,id,felder})});
+      const j=await r.json();
+      if(!j.ok) throw new Error(j.fehler);
+      setSync('Gespeichert.');
+    }catch(e){
+      setSync('Speichern hat nicht geklappt. Die Liste wird neu geladen.',true);
+      busy--; await load(true); return false;
+    }
+    busy--; return true;
+  }
+  function patchLocal(blatt,id,felder,remove){
+    const list=data[blatt]; const i=list.findIndex(x=>String(x.id)===String(id));
+    if(remove){ if(i>=0) list.splice(i,1); }
+    else if(i>=0) Object.assign(list[i],felder); else list.push(Object.assign({id},felder));
+    render();
+  }
+  function save(blatt,id,felder){ patchLocal(blatt,id,felder); return send(blatt,'speichern',id,felder); }
+  function del(blatt,id){ patchLocal(blatt,id,null,true); return send(blatt,'loeschen',id); }
+
+  /* ---------- Darstellung ---------- */
+  function confirmBtn(label,onGo){
+    const b=el('button',{type:'button',className:'ghost',textContent:label});
+    b.addEventListener('click',()=>{ if(b.dataset.armed){onGo();} else {b.dataset.armed='1';b.textContent='Sicher?';setTimeout(()=>{delete b.dataset.armed;b.textContent=label;},3000);} });
+    return b;
+  }
+  function render(){ renderTodos(); renderKarten(); renderLehrer(); }
+
+  function renderTodos(){
+    const items=data.Aufgaben.map(t=>({...t,erledigt:bool(t.erledigt),faellig:isoDay(t.faellig)}));
+    items.sort((a,b)=>(a.erledigt-b.erledigt)||((a.faellig||'9999')<(b.faellig||'9999')?-1:(a.faellig||'9999')>(b.faellig||'9999')?1:0));
+    $('dOpen').textContent=items.filter(t=>!t.erledigt).length;
+    if(!items.length){$('todoList').replaceChildren(el('p',{className:'empty',textContent:'Noch keine Aufgaben. Unten die erste eintragen.'}));return;}
+    $('todoList').replaceChildren(...items.map(t=>{
+      const info=dueInfo(t.faellig,t.erledigt);
+      const cb=el('input',{type:'checkbox',checked:t.erledigt,id:'td-'+t.id});
+      cb.addEventListener('change',()=>save('Aufgaben',t.id,{erledigt:cb.checked}));
+      const txt=el('label',{className:'txt',htmlFor:'td-'+t.id},[el('span',{textContent:t.text}),el('span',{className:'who',textContent:[t.wer,t.faellig?('fällig '+fmtDate(t.faellig)):''].filter(Boolean).join(' · ')})]);
+      return el('div',{className:'trow '+(t.erledigt?'done ':'')+info.row},[cb,txt,el('span',{className:'pillcell'},[el('span',{className:'pill '+info.cls,textContent:info.label})]),confirmBtn('Löschen',()=>del('Aufgaben',t.id))]);
+    }));
+  }
+  function renderKarten(){
+    const items=[...data.Karten].sort((a,b)=>String(a.name).localeCompare(String(b.name),'de'));
+    $('kSum').textContent=items.reduce((s,k)=>s+(Number(k.anzahl)||0),0); $('kCount').textContent=items.length;
+    if(!items.length){$('kBody').replaceChildren(el('tr',{},[el('td',{colSpan:4,className:'empty',textContent:'Noch keine Bestellungen eingetragen.'})]));return;}
+    $('kBody').replaceChildren(...items.map(k=>el('tr',{},[el('td',{textContent:k.name}),el('td',{className:'r num',textContent:String(k.anzahl)}),el('td',{className:'muted',textContent:k.notiz||''}),el('td',{className:'r'},[confirmBtn('Entfernen',()=>del('Karten',k.id))])])));
+  }
+  const ZLAB={ja:'Ja',vorbehalt:'Ja, nicht fest',offen:'Noch offen',nein:'Nein'};
+  function renderLehrer(){
+    const items=[...data.Lehrer].sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));
+    const c=z=>items.filter(l=>l.zusage===z).length;
+    $('lJa').textContent=c('ja')+' fest'; $('lVor').textContent=c('vorbehalt')+' unter Vorbehalt'; $('lOff').textContent=c('offen')+' offen';
+    if(!items.length){$('lBody').replaceChildren(el('tr',{},[el('td',{colSpan:4,className:'empty',textContent:'Noch keine Lehrkräfte eingetragen.'})]));return;}
+    $('lBody').replaceChildren(...items.map(l=>{
+      const sel=el('select'); sel.setAttribute('aria-label','Zusage '+l.name);
+      Object.entries(ZLAB).forEach(([v,t])=>sel.append(el('option',{value:v,textContent:t,selected:l.zusage===v})));
+      sel.addEventListener('change',()=>save('Lehrer',l.id,{zusage:sel.value}));
+      const act=el('div',{className:'lehrer-act'});
+      if(l.aktion){
+        const done=bool(l.aktionErledigt);
+        const cb=el('input',{type:'checkbox',checked:done});
+        cb.addEventListener('change',()=>save('Lehrer',l.id,{aktionErledigt:cb.checked}));
+        act.append(el('label',{},[cb,el('span',{className:'pill '+(done?'ok':(l.aktion==='mail'?'info':'warn')),textContent:l.aktion==='mail'?'Mail schreiben':'Nachfragen'})]));
+      } else act.append(el('span',{className:'note',textContent:'–'}));
+      if(l.notiz) act.append(el('span',{className:'note',textContent:l.notiz}));
+      return el('tr',{},[el('td',{textContent:l.name}),el('td',{},[sel]),el('td',{textContent:l.essen||'–',className:l.essen?'':'muted'}),el('td',{},[act])]);
+    }));
+  }
+
+  /* ---------- Formulare ---------- */
+  $('todoForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const text=$('todoText').value.trim(); if(!text) return;
+    save('Aufgaben','t-'+Date.now().toString(36),{text,wer:$('todoWho').value.trim(),faellig:$('todoDue').value||'',erledigt:false});
+    $('todoText').value='';$('todoWho').value='';$('todoDue').value='';
+  });
+  $('kForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=$('kName').value.trim(); const anzahl=parseInt($('kNum').value,10);
+    if(!name||!(anzahl>0)) return;
+    save('Karten',slug(name),{name,anzahl,notiz:$('kNote').value.trim()});
+    $('kName').value='';$('kNote').value='';$('kNum').value='4';
+  });
+  $('reload').addEventListener('click',()=>load());
+  $('logout').addEventListener('click',()=>{try{localStorage.removeItem(PWKEY);}catch(e){} pw=''; showGate('');});
+
+  /* ---------- Passwort ---------- */
+  function showGate(msg){ $('gate').hidden=false; $('gateMsg').textContent=msg||''; $('gatePw').value=''; setTimeout(()=>$('gatePw').focus(),50); }
+  $('gateForm').addEventListener('submit',async e=>{
+    e.preventDefault(); pw=$('gatePw').value; $('gateBtn').disabled=true; $('gateBtn').textContent='Prüfe …'; $('gateMsg').textContent='';
+    const ok=await load();
+    $('gateBtn').disabled=false; $('gateBtn').textContent='Öffnen';
+    if(ok){ try{localStorage.setItem(PWKEY,pw);}catch(e){} $('gate').hidden=true; }
+  });
+
+  /* ---------- Start & automatisches Nachladen ---------- */
+  if(pw) load(); else showGate('');
+  setInterval(()=>{
+    const a=document.activeElement;
+    const typing=a&&(a.tagName==='INPUT'||a.tagName==='SELECT'||a.tagName==='TEXTAREA');
+    if(pw && !busy && !typing && document.visibilityState==='visible' && $('gate').hidden) load(true);
+  },30000);
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && pw && !busy && $('gate').hidden) load(true); });
+})();
+</script>
+</body>
+</html>
