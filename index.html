@@ -146,6 +146,14 @@ html{-webkit-text-size-adjust:100%}
 img{max-width:100%}
 .zin{width:72px;text-align:right;font-family:var(--f-mono)}
 .znote{width:100%;min-width:120px}
+body:not([data-rolle="orga"]) .orga-only{display:none!important}
+body[data-rolle="orga"] .stufe-only{display:none!important}
+.trow.ro{grid-template-columns:1fr auto}
+.trow.rw{grid-template-columns:22px 1fr auto}
+.tact{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:760px){.trow.rw .tact{grid-column:2 / 4;justify-content:flex-start}}
+.freig{font:inherit;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;cursor:pointer;border:1px dashed var(--line);background:transparent;color:var(--muted)}
+.freig.an{border-style:solid;border-color:var(--ok);color:var(--ok);background:var(--ok-bg)}
 .gate{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px))}
 .gate-card{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px}
 .gate-card input{font-size:1rem;padding:10px 12px}
@@ -165,7 +173,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
       <p class="motto">„DönerkebABI – 12 Jahre auf der Stelle gedreht“</p>
       <div class="count">
         <div><b id="dBall">–</b><small>Tage bis zum Ball</small></div>
-        <div><b id="dOpen">–</b><small>offene Aufgaben</small></div>
+        <div><b id="dOpen">–</b><small id="dOpenLbl">offene Aufgaben</small></div>
       </div>
     </div>
     <div class="facts">
@@ -180,15 +188,15 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
 </header>
 
 <nav class="jump" aria-label="Bereiche">
-  <a href="#aufgaben">Aufgaben</a><a href="#karten">Karten</a><a href="#bezahlt">Bezahlt</a><a href="#lehrer">Lehrer</a><a href="#ablauf">Ablauf</a>
+  <a href="#aufgaben">Aufgaben</a><a href="#karten">Karten</a><a href="#bezahlt">Bezahlt</a><a href="#lehrer" class="orga-only">Lehrer</a><a href="#ablauf">Ablauf</a>
   <a href="#location">Location</a><a href="#essen">Essen</a><a href="#einladungen">Einladungen</a><a href="#teams">Teams</a>
-  <a href="#zeitleiste">Zeitleiste</a><a href="#abstimmungen">Abstimmungen</a>
+  <a href="#zeitleiste" class="orga-only">Zeitleiste</a><a href="#abstimmungen">Abstimmungen</a>
 </nav>
 
 <section id="aufgaben">
-  <div class="sec-head"><p class="eyebrow">Mit Fälligkeit · rot = überfällig oder heute, orange = in den nächsten 7 Tagen</p><h2>Aufgaben &amp; Erinnerungen</h2></div>
+  <div class="sec-head"><p class="eyebrow orga-only">Mit Fälligkeit · rot = überfällig oder heute, orange = in den nächsten 7 Tagen · „Stufe“ schaltet eine Aufgabe für alle frei</p><p class="eyebrow stufe-only">Was gerade für die Stufe ansteht</p><h2>Aufgaben</h2></div>
   <div class="todo" id="todoList"><p class="empty">Aufgaben werden geladen …</p></div>
-  <form class="addform" id="todoForm">
+  <form class="addform orga-only" id="todoForm">
     <input type="text" id="todoText" placeholder="Neue Aufgabe" aria-label="Neue Aufgabe" required>
     <input type="text" id="todoWho" placeholder="Wer?" aria-label="Wer" style="flex:0 1 140px">
     <input type="date" id="todoDue" aria-label="Fällig am">
@@ -204,17 +212,17 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   </div>
   <div class="tbl">
     <table>
-      <thead><tr><th>Name</th><th class="r">Karten</th><th>Notiz</th><th></th></tr></thead>
+      <thead><tr><th>Name</th><th class="r">Karten</th><th>Notiz</th><th class="orga-only"></th></tr></thead>
       <tbody id="kBody"><tr><td colspan="4" class="empty">Liste wird geladen …</td></tr></tbody>
     </table>
   </div>
-  <form class="addform" id="kForm">
+  <form class="addform orga-only" id="kForm">
     <input type="text" id="kName" placeholder="Name" aria-label="Name" required>
     <input type="number" id="kNum" min="1" max="20" value="4" aria-label="Anzahl Karten" required>
     <input type="text" id="kNote" placeholder="Notiz (optional)" aria-label="Notiz">
     <button type="submit">Eintragen</button>
   </form>
-  <p class="note">Gleicher Name überschreibt den alten Eintrag.</p>
+  <p class="note orga-only">Gleicher Name überschreibt den alten Eintrag.</p>
   <div class="box">
     <p class="eyebrow">Umfrage im Klassenchat vom 16.09.2025 · „Wie viele Menschen wollt ihr mitbringen (euch eingeschlossen)?“</p>
     <div class="tbl" style="border:0"><table>
@@ -231,7 +239,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
       </tbody>
       <tfoot><tr><td>Gesamt</td><td class="r num">29</td><td class="r num">mind. 153</td></tr></tfoot>
     </table></div>
-    <p class="note">Der WhatsApp-Export zeigt nur, wie oft jede Option gewählt wurde, nicht wer. Die Namen siehst du in WhatsApp, wenn du in der Umfrage auf „Stimmen anzeigen“ tippst. Die Summe passt zu den 154 geplanten Karten.</p>
+    <p class="note">Die Liste darüber zeigt, wer wie abgestimmt hat. Sie ist noch nicht verbindlich. Verbindliche Bestellungen stehen unter „Feste Bestellungen &amp; Bezahlung“.</p>
   </div>
   <p class="status" id="kStatus"></p>
 </section>
@@ -241,21 +249,22 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
     <div class="sec-head"><p class="eyebrow">Verbindlich · unabhängig von der Umfrage-Liste</p><h2>Feste Bestellungen &amp; Bezahlung</h2></div>
     <p class="muted"><b class="num" id="zFest">0</b> fest bestellt · <b class="num" id="zBez">0</b> bezahlt · <span class="num" id="zKomplett">0</span> Personen vollständig bezahlt</p>
   </div>
-  <p class="status err" id="zHint" hidden>Das Script ist noch nicht aktualisiert. Bitte zuerst den neuen Script-Code einfügen und als neue Version bereitstellen.</p>
+  <p class="status err orga-only" id="zHint" hidden>Das Script ist noch nicht aktualisiert. Bitte zuerst den neuen Script-Code einfügen und als neue Version bereitstellen.</p>
   <div class="tbl">
     <table>
-      <thead><tr><th>Name</th><th class="r">Fest bestellt</th><th class="r">Bezahlt</th><th>Status</th><th>Notiz</th><th></th></tr></thead>
+      <thead><tr><th>Name</th><th class="r">Fest bestellt</th><th class="r">Bezahlt</th><th>Status</th><th>Notiz</th><th class="orga-only"></th></tr></thead>
       <tbody id="zBody"><tr><td colspan="6" class="empty">Liste wird geladen …</td></tr></tbody>
     </table>
   </div>
-  <form class="addform" id="zForm">
+  <form class="addform orga-only" id="zForm">
     <input type="text" id="zName" placeholder="Name hinzufügen" aria-label="Name hinzufügen" required>
     <button type="submit">Hinzufügen</button>
   </form>
-  <p class="note">Zahlen direkt in der Tabelle ändern, gespeichert wird beim Verlassen des Feldes. Hier nur eintragen, was verbindlich bestellt bzw. bezahlt ist. Die Umfrage-Liste oben bleibt davon unberührt.</p>
+  <p class="note orga-only">Zahlen direkt in der Tabelle ändern, gespeichert wird beim Verlassen des Feldes. Hier nur eintragen, was verbindlich bestellt bzw. bezahlt ist. Die Umfrage-Liste oben bleibt davon unberührt.</p>
+  <p class="note stufe-only">Stand der verbindlichen Bestellungen und Zahlungen. Wenn bei dir etwas nicht stimmt, melde dich beim Orga-Team.</p>
 </section>
 
-<section id="lehrer">
+<section id="lehrer" class="orga-only">
   <div class="sec-row">
     <div class="sec-head"><p class="eyebrow">Stand Zusageliste Oktober 2026</p><h2>Lehrkräfte</h2></div>
     <p class="muted"><span class="pill ok" id="lJa">– fest</span> <span class="pill warn" id="lVor">– unter Vorbehalt</span> <span class="pill plain" id="lOff">– offen</span></p>
@@ -266,52 +275,37 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
       <tbody id="lBody"><tr><td colspan="4" class="empty">Liste wird geladen …</td></tr></tbody>
     </table>
   </div>
-  <p class="note">Herr Wehner, Frau Wadewitz und Herr Roy sind nicht mehr an der Schule und werden per Mail eingeladen.</p>
   <p class="status" id="lStatus"></p>
 </section>
 
 <section id="ablauf">
-  <div class="sec-head"><p class="eyebrow">Laut Einladungstext</p><h2>Ablauf am 03.07.2027</h2></div>
-  <div class="flow">
-    <div><b>16:00</b><span>Beginn, Eintreffen</span></div>
-    <div><b>ca. 17:00</b><span>Familienfotos</span></div>
-    <div><b>danach</b><span>Feierliche Zeugnisverleihung</span></div>
-    <div><b>19:00</b><span>Gemeinsames Abendessen (Buffet)</span></div>
-    <div><b>danach</b><span>Programm &amp; Party, DJ bis 02:00</span></div>
-  </div>
-  <p class="note">Räume müssen bis Sonntag, 04.07.2027, 9:00 Uhr geräumt sein. Die Zeugnisausgabe findet auf dem Ball statt.</p>
+  <div class="sec-head"><p class="eyebrow">Samstag, 03.07.2027</p><h2>Ablauf</h2></div>
+  <div class="box stufe-only"><p class="muted">Der genaue Ablauf folgt hier in Kürze.</p></div>
+  <div data-slot="ablauf"></div>
 </section>
 
 <section id="location">
-  <div class="sec-head"><p class="eyebrow">Nutzungsvertrag G 009/2026</p><h2>Gasthof Weißig</h2></div>
+  <div class="sec-head"><p class="eyebrow">Location</p><h2>Gasthof Weißig</h2></div>
   <div class="grid2">
     <div class="box">
       <dl class="kv">
         <dt>Adresse</dt><dd>Bautzner Landstraße 280, 01328 Dresden</dd>
-        <dt>Räume</dt><dd>Ballsaal (max. 199) + kleiner Saal (max. 45)</dd>
-        <dt>Mietzeit</dt><dd>Wochenende, bis So 9:00 Uhr</dd>
-        <dt>Mieterin</dt><dd>Mandy Noack (Elternvertretung)</dd>
-        <dt>Kündigung</dt><dd>kostenlos bis 08.05.2027</dd>
+        <dt>Ballsaal</dt><dd>bis 199 Personen</dd>
+        <dt>Kleiner Saal</dt><dd>bis 45 Personen</dd>
       </dl>
-      <p class="note">Gewählt am 30.03.2026 (25:0). Heller und günstiger als das Arteum. Weitere Angebote: Parkhotel (Kakadu Bar), Arteum, Watzke Ballsaal, Flughafen.</p>
+      <p class="note"><a href="https://maps.apple.com/?q=Gasthof+Wei%C3%9Fig&amp;address=Bautzner+Landstra%C3%9Fe+280,+01328+Dresden" target="_blank" rel="noopener">In Apple Karten öffnen</a> · <a href="https://www.google.com/maps/search/?api=1&amp;query=Gasthof+Wei%C3%9Fig+Bautzner+Landstra%C3%9Fe+280+01328+Dresden" target="_blank" rel="noopener">In Google Maps öffnen</a></p>
     </div>
     <div class="box">
-      <p class="eyebrow">Inklusive</p>
+      <p class="eyebrow">Ausstattung</p>
       <ul class="clean">
-        <li>Tische &amp; Stühle für 250 Personen inkl. Aufbau</li>
-        <li>Theke mit Zapfanlage, Getränkekühlschrank, Tiefkühltruhe</li>
-        <li>35 m² Bühne, Garderobe, WCs, Parkplätze</li>
-        <li>Externes Catering erlaubt</li>
-      </ul>
-      <p class="eyebrow" style="margin-top:6px">Achtung</p>
-      <ul class="clean">
-        <li>Kein Geschirr, keine Gläser, kein Besteck</li>
-        <li>Lichttechnik nur gegen Aufpreis</li>
-        <li>Haftpflichtversicherung vorher vorlegen, GEMA selbst anmelden</li>
-        <li>Personenhöchstzahl darf nicht überschritten werden</li>
+        <li>Ballsaal und kleiner Saal</li>
+        <li>35 m² Bühne</li>
+        <li>Bar mit Zapfanlage</li>
+        <li>Garderobe, WCs, Parkplätze am Haus</li>
       </ul>
     </div>
   </div>
+  <div data-slot="vertrag"></div>
 </section>
 
 <section id="essen">
@@ -319,7 +313,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   <div class="grid2">
     <div class="box">
       <p><b>Entscheidung: Dönerbuffet</b> (Abstimmung 19.06.2026, 19:7 gegen klassisches Buffet).</p>
-      <p class="muted">Gründe laut Chat: einfacher bei Unverträglichkeiten. Heinrich hat die Entscheidung am 25.08.2026 als endgültig erklärt. Ein Caterer ist noch nicht gebucht. Rona hat Hilfe beim Catering angeboten.</p>
+      <p class="muted">Ein Dönerbuffet lässt sich gut an Unverträglichkeiten anpassen. Vegetarische Varianten sind eingeplant.</p>
     </div>
     <div class="box">
       <p class="eyebrow">Essbesonderheiten (Umfrage 27.04.2026, Lehrer inklusive)</p>
@@ -340,11 +334,11 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
 
 <section id="einladungen">
   <div class="sec-head"><p class="eyebrow">Druck &amp; Design</p><h2>Einladungen</h2></div>
-  <div class="grid3">
+  <div class="grid2">
     <div class="box"><p class="eyebrow">Design</p><p class="big" style="font-family:var(--f-display)">Karte 2</p><p class="note">Schwarz mit goldener Schrift, 16 Stimmen (26.08.2026).</p></div>
     <div class="box"><p class="eyebrow">Menge</p><p class="big">ca. 50</p><p class="note">Umfrage 09.09.2026 mit 22 Antworten. Formelle Einladung, nicht das Ticket.</p></div>
-    <div class="box"><p class="eyebrow">Fehler vor dem Druck</p><p class="big" style="color:var(--crit)">200 → 280</p><p class="note">Die Karte nennt „Bautzner Landstraße 200“, laut Vertrag ist es Nr. 280.</p></div>
   </div>
+  <div data-slot="einladung"></div>
 </section>
 
 <section id="teams">
@@ -365,29 +359,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   </div>
 </section>
 
-<section id="zeitleiste">
-  <div class="sec-head"><p class="eyebrow">Was passiert ist und was kommt</p><h2>Zeitleiste</h2></div>
-  <div class="tl">
-    <div><time>02.09.2025</time><span>Abstimmung: Abiball ja (26:0)</span></div>
-    <div><time>24.09.2025</time><span>Lehrer sollen eingeladen werden (28:0)</span></div>
-    <div><time>21.10.2025</time><span>Abstimmung über einzelne Lehrkräfte, Zeugnisausgabe beim Ball</span></div>
-    <div><time>16.12.2025</time><span>Idee Flughafen-Konferenzebene (23:0), nicht weiterverfolgt</span></div>
-    <div><time>25.03.2026</time><span>Angebote verschiedener Locations, Catering-Umfrage gestartet</span></div>
-    <div><time>30.03.2026</time><span>Gasthof Weißig angenommen (25:0)</span></div>
-    <div><time>31.03.2026</time><span>Teams eingeteilt</span></div>
-    <div><time>13.04.2026</time><span>Motto-Umfrage: zunächst „Abikalypse“</span></div>
-    <div><time>15.04.2026</time><span>Nutzungsvertrag Gasthof Weißig erhalten</span></div>
-    <div><time>19.06.2026</time><span>Dönerbuffet gewählt (19:7)</span></div>
-    <div><time>23.06.2026</time><span>Mottoänderung zum Essen: ja (20:6)</span></div>
-    <div><time>25.08.2026</time><span>Motto final: DönerkebABI (17:9)</span></div>
-    <div><time>26.08.2026</time><span>Einladungsdesign: Karte 2 (16 Stimmen)</span></div>
-    <div class="now"><time>31.10.2026</time><span>Frist laut Vertrag (Anzahlung)</span></div>
-    <div class="future"><time>14.11.2026</time><span>Baumpflanzaktion Sparkasse und Tag der offenen Tür</span></div>
-    <div class="future"><time>08.05.2027</time><span>Letzter Tag für kostenlose Kündigung</span></div>
-    <div class="future"><time>03.07.2027</time><span><b>Abiball</b>, 16:00 Uhr</span></div>
-    <div class="future"><time>04.07.2027</time><span>Räumung bis 9:00 Uhr</span></div>
-  </div>
-</section>
+<div data-slot="zeitleiste"></div>
 
 <section id="abstimmungen">
   <div class="sec-head"><p class="eyebrow">Was die Stufe entschieden hat</p><h2>Abstimmungen</h2></div>
@@ -408,9 +380,9 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   </table></div>
 </section>
 
-
 <footer class="syncbar">
   <span class="status" id="sync">Lade Daten …</span>
+  <span class="pill info" id="rolleTag" hidden></span>
   <button type="button" class="ghost" id="reload">Neu laden</button>
   <button type="button" class="ghost" id="logout">Abmelden</button>
 </footer>
@@ -420,8 +392,8 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   <form class="gate-card" id="gateForm">
     <p class="eyebrow">Semper Gymnasium · Abiturjahrgang 2027</p>
     <h2>Abiball 2027</h2>
-    <p class="muted">Bitte das Passwort der Stufe eingeben.</p>
-    <input type="password" id="gatePw" autocomplete="current-password" aria-label="Passwort" required>
+    <p class="muted">Bitte euren Code eingeben.</p>
+    <input type="password" id="gatePw" autocomplete="current-password" aria-label="Code" required>
     <button type="submit" id="gateBtn">Öffnen</button>
     <p class="status err" id="gateMsg"></p>
   </form>
@@ -439,7 +411,8 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
 
   let pw=''; try{pw=localStorage.getItem(PWKEY)||'';}catch(e){}
   let data={Karten:[],Lehrer:[],Aufgaben:[],Zahlungen:[]};
-  let busy=0, lastLoad=null;
+  let busy=0, lastLoad=null, rolle='', slotsDone=false;
+  const orga=()=>rolle==='orga';
 
   const bool=v=>v===true||String(v).toUpperCase()==='TRUE'||String(v).toUpperCase()==='WAHR';
   const slug=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ß/g,'ss').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,80)||('x'+Date.now().toString(36));
@@ -469,8 +442,11 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
       const ctl=new AbortController(); const to=setTimeout(()=>ctl.abort(),20000);
       const r=await fetch(API+'?pw='+encodeURIComponent(pw)+'&t='+Date.now(),{signal:ctl.signal}); clearTimeout(to);
       const j=await r.json();
-      if(!j.ok){ if(j.fehler==='passwort'){showGate('Passwort falsch.');return false;} throw new Error(j.fehler); }
-      data=j.daten; $('zHint').hidden=Array.isArray(data.Zahlungen); if(!Array.isArray(data.Zahlungen)) data.Zahlungen=[]; lastLoad=new Date();
+      if(!j.ok){ if(j.fehler==='passwort'){showGate('Code falsch.');return false;} throw new Error(j.fehler); }
+      data=Object.assign({Karten:[],Lehrer:[],Aufgaben:[],Zahlungen:[]},j.daten||{});
+      $('zHint').hidden=Array.isArray((j.daten||{}).Zahlungen);
+      setRolle(j.rolle||'orga', j.inhalt||{});
+      lastLoad=new Date();
       render();
       setSync('Stand: '+lastLoad.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr');
       return true;
@@ -502,6 +478,16 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   function save(blatt,id,felder){ patchLocal(blatt,id,felder); return send(blatt,'speichern',id,felder); }
   function del(blatt,id){ patchLocal(blatt,id,null,true); return send(blatt,'loeschen',id); }
 
+  function setRolle(r,inhalt){
+    if(r!==rolle){ rolle=r; slotsDone=false; document.body.dataset.rolle=r;
+      document.querySelectorAll('[data-slot]').forEach(s=>s.innerHTML='');
+      $('rolleTag').hidden=false; $('rolleTag').textContent=r==='orga'?'Orga':'Stufe'; }
+    if(!slotsDone && r==='orga'){
+      document.querySelectorAll('[data-slot]').forEach(s=>{ if(inhalt[s.dataset.slot]) s.innerHTML=inhalt[s.dataset.slot]; });
+      slotsDone=true;
+    }
+  }
+
   /* ---------- Darstellung ---------- */
   function confirmBtn(label,onGo){
     const b=el('button',{type:'button',className:'ghost',textContent:label});
@@ -512,22 +498,31 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
 
   function renderTodos(){
     const items=data.Aufgaben.map(t=>({...t,erledigt:bool(t.erledigt),faellig:isoDay(t.faellig)}));
+    $('dOpenLbl').textContent=orga()?'offene Aufgaben':'Aufgaben für euch';
     items.sort((a,b)=>(a.erledigt-b.erledigt)||((a.faellig||'9999')<(b.faellig||'9999')?-1:(a.faellig||'9999')>(b.faellig||'9999')?1:0));
     $('dOpen').textContent=items.filter(t=>!t.erledigt).length;
-    if(!items.length){$('todoList').replaceChildren(el('p',{className:'empty',textContent:'Noch keine Aufgaben. Unten die erste eintragen.'}));return;}
+    if(!items.length){$('todoList').replaceChildren(el('p',{className:'empty',textContent:orga()?'Noch keine Aufgaben. Unten die erste eintragen.':'Aktuell gibt es keine Aufgaben für die Stufe.'}));return;}
     $('todoList').replaceChildren(...items.map(t=>{
       const info=dueInfo(t.faellig,t.erledigt);
+      const meta=el('span',{className:'who',textContent:[t.wer,t.faellig?('fällig '+fmtDate(t.faellig)):''].filter(Boolean).join(' · ')});
+      const pill=el('span',{className:'pillcell'},[el('span',{className:'pill '+info.cls,textContent:info.label})]);
+      if(!orga()){
+        return el('div',{className:'trow ro '+(t.erledigt?'done ':'')+info.row},[el('div',{className:'txt'},[el('span',{textContent:t.text}),meta]),pill]);
+      }
       const cb=el('input',{type:'checkbox',checked:t.erledigt,id:'td-'+t.id});
       cb.addEventListener('change',()=>save('Aufgaben',t.id,{erledigt:cb.checked}));
-      const txt=el('label',{className:'txt',htmlFor:'td-'+t.id},[el('span',{textContent:t.text}),el('span',{className:'who',textContent:[t.wer,t.faellig?('fällig '+fmtDate(t.faellig)):''].filter(Boolean).join(' · ')})]);
-      return el('div',{className:'trow '+(t.erledigt?'done ':'')+info.row},[cb,txt,el('span',{className:'pillcell'},[el('span',{className:'pill '+info.cls,textContent:info.label})]),confirmBtn('Löschen',()=>del('Aufgaben',t.id))]);
+      const txt=el('label',{className:'txt',htmlFor:'td-'+t.id},[el('span',{textContent:t.text}),meta]);
+      const fr=bool(t.freigabe);
+      const fb=el('button',{type:'button',className:'freig'+(fr?' an':''),textContent:fr?'Stufe: an':'Stufe: aus',title:'Für die Stufe sichtbar machen oder verbergen'});
+      fb.addEventListener('click',()=>save('Aufgaben',t.id,{freigabe:!fr}));
+      return el('div',{className:'trow rw '+(t.erledigt?'done ':'')+info.row},[cb,txt,el('div',{className:'tact'},[pill,fb,confirmBtn('Löschen',()=>del('Aufgaben',t.id))])]);
     }));
   }
   function renderKarten(){
     const items=[...data.Karten].sort((a,b)=>String(a.name).localeCompare(String(b.name),'de'));
     $('kSum').textContent=items.reduce((s,k)=>s+(Number(k.anzahl)||0),0); $('kCount').textContent=items.length;
     if(!items.length){$('kBody').replaceChildren(el('tr',{},[el('td',{colSpan:4,className:'empty',textContent:'Noch keine Bestellungen eingetragen.'})]));return;}
-    $('kBody').replaceChildren(...items.map(k=>el('tr',{},[el('td',{textContent:k.name}),el('td',{className:'r num',textContent:String(k.anzahl)}),el('td',{className:'muted',textContent:k.notiz||''}),el('td',{className:'r'},[confirmBtn('Entfernen',()=>del('Karten',k.id))])])));
+    $('kBody').replaceChildren(...items.map(k=>el('tr',{},[el('td',{textContent:k.name}),el('td',{className:'r num',textContent:String(k.anzahl)}),el('td',{className:'muted',textContent:k.notiz||''}),el('td',{className:'r orga-only'},orga()?[confirmBtn('Entfernen',()=>del('Karten',k.id))]:[])])));
   }
   function renderZahlungen(){
     const items=[...data.Zahlungen].sort((a,b)=>String(a.name).localeCompare(String(b.name),'de'));
@@ -543,12 +538,15 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
         i.addEventListener('change',()=>{const v=n(i.value);i.value=v;save('Zahlungen',z.id,{[field]:v});});return i;};
       const note=el('input',{type:'text',value:z.notiz||'',className:'znote',placeholder:'–'});note.setAttribute('aria-label','Notiz '+z.name);
       note.addEventListener('change',()=>save('Zahlungen',z.id,{notiz:note.value.trim()}));
+      if(!orga()) return el('tr',{},[el('td',{textContent:z.name}),el('td',{className:'r num',textContent:String(f)}),el('td',{className:'r num',textContent:String(b)}),
+        el('td',{},[el('span',{className:'pill '+st[0],textContent:st[1]})]),el('td',{className:'muted',textContent:z.notiz||''}),el('td',{className:'orga-only'})]);
       return el('tr',{},[el('td',{textContent:z.name}),el('td',{className:'r'},[num('fest',f,'Fest bestellt')]),el('td',{className:'r'},[num('bezahlt',b,'Bezahlt')]),
         el('td',{},[el('span',{className:'pill '+st[0],textContent:st[1]})]),el('td',{},[note]),el('td',{className:'r'},[confirmBtn('Entfernen',()=>del('Zahlungen',z.id))])]);
     }));
   }
   const ZLAB={ja:'Ja',vorbehalt:'Ja, nicht fest',offen:'Noch offen',nein:'Nein'};
   function renderLehrer(){
+    if(!orga()) return;
     const items=[...data.Lehrer].sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));
     const c=z=>items.filter(l=>l.zusage===z).length;
     $('lJa').textContent=c('ja')+' fest'; $('lVor').textContent=c('vorbehalt')+' unter Vorbehalt'; $('lOff').textContent=c('offen')+' offen';
@@ -573,7 +571,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   $('todoForm').addEventListener('submit',e=>{
     e.preventDefault();
     const text=$('todoText').value.trim(); if(!text) return;
-    save('Aufgaben','t-'+Date.now().toString(36),{text,wer:$('todoWho').value.trim(),faellig:$('todoDue').value||'',erledigt:false});
+    save('Aufgaben','t-'+Date.now().toString(36),{text,wer:$('todoWho').value.trim(),faellig:$('todoDue').value||'',erledigt:false,freigabe:false});
     $('todoText').value='';$('todoWho').value='';$('todoDue').value='';
   });
   $('kForm').addEventListener('submit',e=>{
@@ -592,7 +590,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
     $('zName').value='';
   });
   $('reload').addEventListener('click',()=>load());
-  $('logout').addEventListener('click',()=>{try{localStorage.removeItem(PWKEY);}catch(e){} pw=''; showGate('');});
+  $('logout').addEventListener('click',()=>{try{localStorage.removeItem(PWKEY);}catch(e){} pw=''; rolle=''; delete document.body.dataset.rolle; showGate('');});
 
   /* ---------- Passwort ---------- */
   function showGate(msg){ $('gate').hidden=false; $('gateMsg').textContent=msg||''; $('gatePw').value=''; setTimeout(()=>$('gatePw').focus(),50); }
