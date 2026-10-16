@@ -148,6 +148,12 @@ img{max-width:100%}
 .znote{width:100%;min-width:120px}
 body:not([data-rolle="orga"]) .orga-only{display:none!important}
 body[data-rolle="orga"] .stufe-only{display:none!important}
+body[data-rolle="gast"] .nicht-gast{display:none!important}
+body:not([data-rolle="gast"]) .gast-only{display:none!important}
+body[data-rolle="gast"] .essgrid{grid-template-columns:1fr}
+.welcome{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px}
+.welcome p{max-width:62ch}
+.icsbtn{display:inline-flex;align-self:flex-start;text-decoration:none;font-weight:700;font-size:.9rem;border-radius:6px;padding:9px 14px;background:var(--gold);color:var(--surface)}
 .trow.ro{grid-template-columns:1fr auto}
 .trow.rw{grid-template-columns:22px 1fr auto}
 .tact{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
@@ -173,7 +179,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
       <p class="motto">„DönerkebABI – 12 Jahre auf der Stelle gedreht“</p>
       <div class="count">
         <div><b id="dBall">–</b><small>Tage bis zum Ball</small></div>
-        <div><b id="dOpen">–</b><small id="dOpenLbl">offene Aufgaben</small></div>
+        <div class="nicht-gast"><b id="dOpen">–</b><small id="dOpenLbl">offene Aufgaben</small></div>
       </div>
     </div>
     <div class="facts">
@@ -182,18 +188,25 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
       <div><span>Ort</span><span>Gasthof Weißig</span></div>
       <div><span>Adresse</span><span>Bautzner Landstr. 280</span></div>
       <div><span>Essen</span><span>Dönerbuffet</span></div>
-      <div><span>Gäste</span><span class="num">154 + 18 Lehrer</span></div>
+      <div class="nicht-gast"><span>Gäste</span><span class="num">154 + 18 Lehrer</span></div>
     </div>
   </div>
 </header>
 
+<section class="welcome gast-only" id="willkommen">
+  <p class="eyebrow">Herzlich willkommen</p>
+  <h2>Schön, dass Sie dabei sind</h2>
+  <p>Der Abiturjahrgang 2027 des Semper Gymnasiums lädt Sie herzlich zum Abiball ein. Hier finden Sie alle wichtigen Informationen zum Abend. Die Seite wird ergänzt, sobald es Neuigkeiten gibt.</p>
+  <a class="icsbtn" id="icsLink" href="#" download="Abiball-2027.ics">Termin in den Kalender übernehmen</a>
+</section>
+
 <nav class="jump" aria-label="Bereiche">
-  <a href="#aufgaben">Aufgaben</a><a href="#karten">Karten</a><a href="#bezahlt">Bezahlt</a><a href="#lehrer" class="orga-only">Lehrer</a><a href="#ablauf">Ablauf</a>
-  <a href="#location">Location</a><a href="#essen">Essen</a><a href="#einladungen">Einladungen</a><a href="#teams">Teams</a>
-  <a href="#zeitleiste" class="orga-only">Zeitleiste</a><a href="#abstimmungen">Abstimmungen</a>
+  <a href="#aufgaben" class="nicht-gast">Aufgaben</a><a href="#karten" class="nicht-gast">Karten</a><a href="#bezahlt" class="nicht-gast">Bezahlt</a><a href="#lehrer" class="orga-only">Lehrer</a><a href="#ablauf">Ablauf</a>
+  <a href="#location">Location</a><a href="#essen">Essen</a><a href="#einladungen" class="nicht-gast">Einladungen</a><a href="#teams" class="nicht-gast">Teams</a>
+  <a href="#zeitleiste" class="orga-only">Zeitleiste</a><a href="#abstimmungen" class="nicht-gast">Abstimmungen</a>
 </nav>
 
-<section id="aufgaben">
+<section id="aufgaben" class="nicht-gast">
   <div class="sec-head"><p class="eyebrow orga-only">Mit Fälligkeit · rot = überfällig oder heute, orange = in den nächsten 7 Tagen · „Stufe“ schaltet eine Aufgabe für alle frei</p><p class="eyebrow stufe-only">Was gerade für die Stufe ansteht</p><h2>Aufgaben</h2></div>
   <div class="todo" id="todoList"><p class="empty">Aufgaben werden geladen …</p></div>
   <form class="addform orga-only" id="todoForm">
@@ -205,7 +218,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   <p class="status" id="todoStatus"></p>
 </section>
 
-<section id="karten">
+<section id="karten" class="nicht-gast">
   <div class="sec-row">
     <div class="sec-head"><p class="eyebrow">Wer hat wie viele Karten bestellt</p><h2>Kartenbestellungen</h2></div>
     <p class="muted">Bestellt: <b class="num" id="kSum">0</b> von <span class="num">154</span> geplanten Karten · <span class="num" id="kCount">0</span> Schüler eingetragen</p>
@@ -244,7 +257,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   <p class="status" id="kStatus"></p>
 </section>
 
-<section id="bezahlt">
+<section id="bezahlt" class="nicht-gast">
   <div class="sec-row">
     <div class="sec-head"><p class="eyebrow">Verbindlich · unabhängig von der Umfrage-Liste</p><h2>Feste Bestellungen &amp; Bezahlung</h2></div>
     <p class="muted"><b class="num" id="zFest">0</b> fest bestellt · <b class="num" id="zBez">0</b> bezahlt · <span class="num" id="zKomplett">0</span> Personen vollständig bezahlt</p>
@@ -310,12 +323,13 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
 
 <section id="essen">
   <div class="sec-head"><p class="eyebrow">Catering</p><h2>Essen</h2></div>
-  <div class="grid2">
+  <div class="grid2 essgrid">
     <div class="box">
-      <p><b>Entscheidung: Dönerbuffet</b> (Abstimmung 19.06.2026, 19:7 gegen klassisches Buffet).</p>
+      <p class="nicht-gast"><b>Entscheidung: Dönerbuffet</b> (Abstimmung 19.06.2026, 19:7 gegen klassisches Buffet).</p>
+      <p class="gast-only"><b>Am Abend gibt es ein Dönerbuffet.</b></p>
       <p class="muted">Ein Dönerbuffet lässt sich gut an Unverträglichkeiten anpassen. Vegetarische Varianten sind eingeplant.</p>
     </div>
-    <div class="box">
+    <div class="box nicht-gast">
       <p class="eyebrow">Essbesonderheiten (Umfrage 27.04.2026, Lehrer inklusive)</p>
       <table>
         <tbody>
@@ -332,7 +346,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   </div>
 </section>
 
-<section id="einladungen">
+<section id="einladungen" class="nicht-gast">
   <div class="sec-head"><p class="eyebrow">Druck &amp; Design</p><h2>Einladungen</h2></div>
   <div class="grid2">
     <div class="box"><p class="eyebrow">Design</p><p class="big" style="font-family:var(--f-display)">Karte 2</p><p class="note">Schwarz mit goldener Schrift, 16 Stimmen (26.08.2026).</p></div>
@@ -341,7 +355,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   <div data-slot="einladung"></div>
 </section>
 
-<section id="teams">
+<section id="teams" class="nicht-gast">
   <div class="sec-head"><p class="eyebrow">Einteilung vom 31.03.2026 (Whiteboard)</p><h2>Teams</h2></div>
   <div class="teams">
     <div class="team"><h3>Location &amp; Gästezahl</h3><p>Emma, Mia, Eva, Johanna, Anna, Merle</p></div>
@@ -361,7 +375,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
 
 <div data-slot="zeitleiste"></div>
 
-<section id="abstimmungen">
+<section id="abstimmungen" class="nicht-gast">
   <div class="sec-head"><p class="eyebrow">Was die Stufe entschieden hat</p><h2>Abstimmungen</h2></div>
   <div class="tbl"><table>
     <thead><tr><th>Datum</th><th>Frage</th><th>Ergebnis</th></tr></thead>
@@ -481,7 +495,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   function setRolle(r,inhalt){
     if(r!==rolle){ rolle=r; slotsDone=false; document.body.dataset.rolle=r;
       document.querySelectorAll('[data-slot]').forEach(s=>s.innerHTML='');
-      $('rolleTag').hidden=false; $('rolleTag').textContent=r==='orga'?'Orga':'Stufe'; }
+      $('rolleTag').hidden=false; $('rolleTag').textContent=r==='orga'?'Orga':(r==='gast'?'Gast':'Stufe'); }
     if(!slotsDone && r==='orga'){
       document.querySelectorAll('[data-slot]').forEach(s=>{ if(inhalt[s.dataset.slot]) s.innerHTML=inhalt[s.dataset.slot]; });
       slotsDone=true;
@@ -494,7 +508,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
     b.addEventListener('click',()=>{ if(b.dataset.armed){onGo();} else {b.dataset.armed='1';b.textContent='Sicher?';setTimeout(()=>{delete b.dataset.armed;b.textContent=label;},3000);} });
     return b;
   }
-  function render(){ renderTodos(); renderKarten(); renderZahlungen(); renderLehrer(); }
+  function render(){ if(rolle==='gast') return; renderTodos(); renderKarten(); renderZahlungen(); renderLehrer(); }
 
   function renderTodos(){
     const items=data.Aufgaben.map(t=>({...t,erledigt:bool(t.erledigt),faellig:isoDay(t.faellig)}));
@@ -567,6 +581,14 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
     }));
   }
 
+  /* ---------- Kalender-Datei ---------- */
+  (function(){
+    const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Abiball 2027//DE','BEGIN:VEVENT','UID:abiball-2027-semper@github.io','DTSTAMP:20261016T000000Z',
+      'DTSTART:20270703T140000Z','DTEND:20270704T000000Z','SUMMARY:Abiball 2027 Semper Gymnasium',
+      'LOCATION:Gasthof Weißig\\, Bautzner Landstraße 280\\, 01328 Dresden','END:VEVENT','END:VCALENDAR'].join('\r\n');
+    $('icsLink').href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
+  })();
+
   /* ---------- Formulare ---------- */
   $('todoForm').addEventListener('submit',e=>{
     e.preventDefault();
@@ -606,7 +628,7 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   setInterval(()=>{
     const a=document.activeElement;
     const typing=a&&(a.tagName==='INPUT'||a.tagName==='SELECT'||a.tagName==='TEXTAREA');
-    if(pw && !busy && !typing && document.visibilityState==='visible' && $('gate').hidden) load(true);
+    if(pw && rolle!=='gast' && !busy && !typing && document.visibilityState==='visible' && $('gate').hidden) load(true);
   },30000);
   document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && pw && !busy && $('gate').hidden) load(true); });
 })();
