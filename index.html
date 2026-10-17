@@ -153,7 +153,9 @@ body:not([data-rolle="gast"]) .gast-only{display:none!important}
 body[data-rolle="gast"] .essgrid{grid-template-columns:1fr}
 .welcome{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px}
 .welcome p{max-width:62ch}
-.icsbtn{display:inline-flex;align-self:flex-start;text-decoration:none;font-weight:700;font-size:.9rem;border-radius:6px;padding:9px 14px;background:var(--gold);color:var(--surface)}
+.calbtns{display:flex;gap:10px;flex-wrap:wrap}
+.icsbtn.alt{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.icsbtn{display:inline-flex;text-decoration:none;font-weight:700;font-size:.9rem;border-radius:6px;padding:9px 14px;background:var(--gold);color:var(--surface)}
 .trow.ro{grid-template-columns:1fr auto}
 .trow.rw{grid-template-columns:22px 1fr auto}
 .tact{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
@@ -197,7 +199,10 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
   <p class="eyebrow">Herzlich willkommen</p>
   <h2>Schön, dass Sie dabei sind</h2>
   <p>Der Abiturjahrgang 2027 des Semper Gymnasiums lädt Sie herzlich zum Abiball ein. Hier finden Sie alle wichtigen Informationen zum Abend. Die Seite wird ergänzt, sobald es Neuigkeiten gibt.</p>
-  <a class="icsbtn" id="icsLink" href="#" download="Abiball-2027.ics">Termin in den Kalender übernehmen</a>
+  <div class="calbtns">
+    <a class="icsbtn" href="abiball-2027.ics">Termin in den Kalender (iPhone, Mac, Outlook)</a>
+    <a class="icsbtn alt" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Abiball%202027%20Semper%20Gymnasium&amp;dates=20270703T140000Z/20270704T000000Z&amp;location=Gasthof%20Wei%C3%9Fig%2C%20Bautzner%20Landstra%C3%9Fe%20280%2C%2001328%20Dresden&amp;details=Abiball%20des%20Abiturjahrgangs%202027.%20Beginn%2016%3A00%20Uhr." target="_blank" rel="noopener">Termin in Google Kalender</a>
+  </div>
 </section>
 
 <nav class="jump" aria-label="Bereiche">
@@ -580,14 +585,6 @@ body{padding-top:max(20px, env(safe-area-inset-top, 0px));padding-bottom:max(64p
       return el('tr',{},[el('td',{textContent:l.name}),el('td',{},[sel]),el('td',{textContent:l.essen||'–',className:l.essen?'':'muted'}),el('td',{},[act])]);
     }));
   }
-
-  /* ---------- Kalender-Datei ---------- */
-  (function(){
-    const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Abiball 2027//DE','BEGIN:VEVENT','UID:abiball-2027-semper@github.io','DTSTAMP:20261016T000000Z',
-      'DTSTART:20270703T140000Z','DTEND:20270704T000000Z','SUMMARY:Abiball 2027 Semper Gymnasium',
-      'LOCATION:Gasthof Weißig\\, Bautzner Landstraße 280\\, 01328 Dresden','END:VEVENT','END:VCALENDAR'].join('\r\n');
-    $('icsLink').href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
-  })();
 
   /* ---------- Formulare ---------- */
   $('todoForm').addEventListener('submit',e=>{
